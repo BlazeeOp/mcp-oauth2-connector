@@ -2,6 +2,12 @@
 
 A secure, modular Model Context Protocol (MCP) server with comprehensive security features and AWS Cognito OAuth2 authentication.
 
+## 📺 Video Tutorial
+
+[![MCP Server Tutorial](https://img.shields.io/badge/YouTube-Tutorial-red?style=for-the-badge&logo=youtube)](https://youtu.be/gdFn5ul1OoI)
+
+Watch the complete setup and configuration tutorial on YouTube: [Secure MCP Server with AWS Cognito OAuth2](https://youtu.be/gdFn5ul1OoI)
+
 ## Features
 
 - 🔐 **Secure OAuth2 authentication** via AWS Cognito
