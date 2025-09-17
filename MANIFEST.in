@@ -1,0 +1,32 @@
+# Include documentation
+include README.md
+include REFACTORING_GUIDE.md
+include SECURITY_DOCUMENTATION.md
+include LICENSE
+
+# Include configuration files
+include .env.example
+include requirements.txt
+include pyproject.toml
+
+# Include entry point scripts
+include run_server.py
+
+# Exclude development and build files
+exclude .gitignore
+exclude .env
+prune .git
+prune .idea
+prune __pycache__
+prune *.egg-info
+prune build
+prune dist
+prune .pytest_cache
+prune .mypy_cache
+
+# Include package data
+recursive-include src/datakwip_mcp *.py
+recursive-include src/datakwip_mcp *.md
+recursive-include src/datakwip_mcp *.json
+recursive-include src/datakwip_mcp *.yaml
+recursive-include src/datakwip_mcp *.yml
