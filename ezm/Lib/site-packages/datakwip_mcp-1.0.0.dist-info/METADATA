@@ -1,0 +1,559 @@
+Metadata-Version: 2.4
+Name: datakwip-mcp
+Version: 1.0.0
+Summary: A secure Model Context Protocol server with AWS Cognito OAuth2 authentication
+Home-page: https://github.com/datakwip/datakwip-mcp-connector
+Author: DataKwip Team
+License: MIT
+Project-URL: Homepage, https://github.com/datakwip/datakwip-mcp-connector
+Project-URL: Bug Tracker, https://github.com/datakwip/datakwip-mcp-connector/issues
+Project-URL: Documentation, https://github.com/datakwip/datakwip-mcp-connector/blob/main/README.md
+Keywords: mcp,model-context-protocol,oauth2,aws-cognito,fastapi,security,authentication,datakwip
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Internet :: WWW/HTTP :: HTTP Servers
+Classifier: Topic :: Security :: Cryptography
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.104.1
+Requires-Dist: uvicorn>=0.24.0
+Requires-Dist: pyjwt>=2.8.0
+Requires-Dist: cryptography>=41.0.7
+Requires-Dist: httpx>=0.25.2
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: slowapi>=0.1.9
+Requires-Dist: pydantic>=2.5.0
+Requires-Dist: python-multipart>=0.0.6
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.21.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Requires-Dist: flake8>=6.0.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+Provides-Extra: test
+Requires-Dist: pytest>=7.0.0; extra == "test"
+Requires-Dist: pytest-asyncio>=0.21.0; extra == "test"
+Requires-Dist: pytest-cov>=4.0.0; extra == "test"
+Requires-Dist: httpx>=0.25.0; extra == "test"
+Dynamic: home-page
+Dynamic: requires-python
+
+# Secure MCP Server with AWS Cognito OAuth2
+
+A secure, modular Model Context Protocol (MCP) server with comprehensive security features and AWS Cognito OAuth2 authentication.
+
+## 📺 Video Tutorial
+
+[![MCP Server Tutorial](https://img.shields.io/badge/YouTube-Tutorial-red?style=for-the-badge&logo=youtube)](https://youtu.be/gdFn5ul1OoI)
+
+Watch the complete setup and configuration tutorial on YouTube: [Secure MCP Server with AWS Cognito OAuth2](https://youtu.be/gdFn5ul1OoI)
+
+## Features
+
+- 🔐 **Secure OAuth2 authentication** via AWS Cognito
+- 🧩 **Modular architecture** with clean separation of concerns
+- 🛡️ **Comprehensive security** with rate limiting, input validation, and secure headers
+- 🔧 **Individual tool files** for easy extension
+- 📝 **Context management** (create, retrieve contexts)
+- ✅ **MCP protocol compliance**
+- 👤 **User-scoped operations**
+
+## Project Structure
+
+```
+datakwip-mcp-connector/
+├── src/
+│   └── datakwip_mcp/            # Main package
+│       ├── __init__.py
+│       ├── main.py              # FastAPI app
+│       ├── cli.py               # Command line interface
+│       ├── auth/                # Authentication modules
+│       │   ├── cognito.py       # AWS Cognito integration
+│       │   └── oauth.py         # OAuth2 implementation
+│       ├── config/              # Configuration management
+│       │   └── settings.py      # Environment-based configuration
+│       ├── middleware/          # Request/response middleware
+│       │   ├── cors.py          # CORS configuration
+│       │   ├── rate_limiting.py # Rate limiting protection
+│       │   └── security.py      # Security headers and validation
+│       ├── tools/               # MCP tools (echo, add, etc.)
+│       │   ├── base.py          # Base tool class
+│       │   ├── registry.py      # Tool registry
+│       │   ├── echo.py          # Echo tool
+│       │   └── add.py           # Add tool
+│       └── utils/               # Utility functions
+├── setup.py                     # Setup configuration
+├── pyproject.toml              # Modern Python packaging
+├── requirements.txt            # Dependencies
+├── MANIFEST.in                 # Package files inclusion
+├── LICENSE                     # MIT License
+└── README.md                   # This documentation
+```
+
+## Installation
+
+### Prerequisites
+
+1. **Create new virtual environment with Python 3:**
+```bash
+virtualenv ezm -p python3
+```
+
+2. **Activate virtual environment:**
+```bash
+# Linux/macOS
+    source ezm/bin/activate
+
+# Windows (Command Prompt)
+.\ezm\Scripts\activate.bat
+
+# Windows (PowerShell)
+.\ezm\Scripts\activate.ps1
+```
+
+### Installation Options
+
+#### Option 1: Install as Package (Recommended)
+
+```bash
+# Install the package
+pip install .
+
+# Or install in development mode
+pip install -e .
+
+# Or install with development dependencies
+pip install -e ".[dev]"
+```
+
+#### Option 2: Direct Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## Quick Start
+
+1. **Configure environment**:
+```bash
+cp .env.example .env
+# Edit .env with your AWS Cognito configuration
+```
+
+2. **Run the server**:
+
+**If installed as package (recommended):**
+```bash
+# Simple command with default settings
+datakwip-mcp
+
+# Development mode with auto-reload and debug logging
+datakwip-mcp --dev
+
+# Custom host and port
+datakwip-mcp --host 127.0.0.1 --port 8080
+
+# Production mode with specific options
+datakwip-mcp --no-reload --log-level info
+
+# See all available options
+datakwip-mcp --help
+```
+
+**If running directly:**
+```bash
+# As a module
+python -m datakwip_mcp.main
+
+# With uvicorn directly
+uvicorn datakwip_mcp.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+3. **Expose the server using Serveo** (no installation required):
+```bash
+ssh -R 80:localhost:8000 serveo.net
+```
+
+This will give you a public HTTPS URL like `https://something.serveo.net` that you can use in Claude Desktop.
+
+## AWS Cognito Setup
+
+Make sure your AWS Cognito App Client has:
+
+1. **Callback URLs**: `https://claude.ai/api/mcp/auth_callback`
+2. **OAuth 2.0 flows**: Authorization code grant enabled
+3. **OAuth scopes**: Configure the scopes via the `COGNITO_OAUTH_SCOPES` environment variable (default: `openid`, `email`, `profile`, `aws.cognito.signin.user.admin`)
+
+## Configuration
+
+### Environment Variables
+
+**Required variables (set in .env):**
+```bash
+# AWS Cognito Configuration (Required)
+COGNITO_USER_POOL_ID=us-east-1_xxxxxxxxx
+COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxx
+COGNITO_REGION=us-east-1
+
+# Cognito Domain - Set this and URLs will be auto-generated
+COGNITO_DOMAIN=your-cognito-domain
+```
+
+**Optional variables:**
+```bash
+# Cognito Client Secret (Optional - leave empty for PKCE flow)
+COGNITO_CLIENT_SECRET=
+
+# Manual URL overrides (optional - only use if you need custom URLs)
+COGNITO_AUTH_URL=https://your-cognito-domain.auth.us-east-1.amazoncognito.com/oauth2/authorize
+COGNITO_TOKEN_URL=https://your-cognito-domain.auth.us-east-1.amazoncognito.com/oauth2/token
+
+# OAuth2 Scopes (comma-separated)
+COGNITO_OAUTH_SCOPES=openid,email,profile,aws.cognito.signin.user.admin
+
+# CORS Configuration (comma-separated)
+CORS_ALLOWED_ORIGINS=https://claude.ai,https://julius.ai,https://api.julius.ai,https://app.julius.ai
+
+# Client-specific configurations (optional)
+CLAUDE_CLIENT_ID=  # Defaults to COGNITO_CLIENT_ID if not set
+JULIUS_CLIENT_ID=  # Defaults to COGNITO_CLIENT_ID if not set
+
+# Security Configuration
+ENVIRONMENT=production  # or development
+
+# Server Configuration
+SERVER_BASE_URL=https://your-server.com
+
+# Logging
+LOG_LEVEL=INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+LOG_SENSITIVE_DATA=false  # true or false
+```
+
+### Programmatic Configuration
+
+```python
+from datakwip_mcp.config.settings import get_cognito_config, get_server_config
+
+# Get configurations
+cognito_config = get_cognito_config()
+server_config = get_server_config()
+
+print(f"User Pool ID: {cognito_config['user_pool_id']}")
+print(f"Environment: {server_config['environment']}")
+```
+
+## Available Tools
+
+- **echo**: Echo back the provided message (useful for testing)
+- **add**: Add two numbers together (mathematical operations)
+
+## Available Resources
+
+- **contexts**: User contexts management with create and retrieve operations
+
+## Authentication
+
+The server uses OAuth2 authentication via AWS Cognito. When you first use the server, Claude Desktop will automatically handle the OAuth2 flow and prompt you to authenticate via your Cognito user pool.
+
+## API Endpoints
+
+- `POST /mcp` - Main MCP protocol handler
+- `GET /v1/contexts` - Get user contexts
+- `POST /v1/contexts` - Create new context
+- `GET /.well-known/oauth-authorization-server` - OAuth2 server metadata
+- `GET /.well-known/oauth-protected-resource` - Protected resource metadata
+- `GET /health` - Health check
+
+## Testing
+
+You can test the server endpoints:
+```bash
+# Health check
+curl https://your-serveo-url.serveo.net/health
+
+# OAuth metadata
+curl https://your-serveo-url.serveo.net/.well-known/oauth-authorization-server
+```
+
+### MCP Inspector
+
+Use the official MCP Inspector to test your server's MCP protocol compliance:
+
+```bash
+npx @modelcontextprotocol/inspector
+```
+
+This tool will help you:
+- Validate the OAuth2 authentication flow
+- Test MCP protocol implementation
+- Debug authentication issues
+- Inspect available tools and capabilities
+
+## Development
+
+### Development Workflow
+
+#### 1. Set Up Development Environment
+```bash
+# Clone the repository
+git clone <your-repo>
+cd datakwip-mcp-connector
+
+# Install in development mode
+pip install -e ".[dev]"
+
+# Copy environment configuration
+cp .env.example .env
+# Edit .env with your settings
+```
+
+#### 2. Development Commands
+```bash
+# Run with auto-reload for development
+datakwip-mcp --dev
+
+# Run tests
+pytest
+
+# Run tests with coverage
+pytest --cov=datakwip_mcp
+
+# Format code
+black src/
+isort src/
+
+# Type checking
+mypy src/
+
+# Linting
+flake8 src/
+```
+
+### Programmatic Usage
+
+#### Import the package
+```python
+# Import main components
+from datakwip_mcp.main import app
+from datakwip_mcp.tools.registry import ToolRegistry
+from datakwip_mcp.config.settings import get_cognito_config, get_server_config
+
+# Import specific modules
+from datakwip_mcp.tools.echo import EchoTool
+from datakwip_mcp.tools.add import AddTool
+from datakwip_mcp.auth.cognito import validate_cognito_token
+
+# Use the FastAPI app
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+```
+
+#### Add Custom Tools
+```python
+from datakwip_mcp.tools.base import BaseTool, ToolResult
+from datakwip_mcp.tools.registry import ToolRegistry
+
+class MyCustomTool(BaseTool):
+    @property
+    def name(self) -> str:
+        return "my_tool"
+    
+    @property
+    def description(self) -> str:
+        return "My custom tool"
+    
+    @property
+    def input_schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "input": {"type": "string", "description": "Input parameter"}
+            },
+            "required": ["input"]
+        }
+    
+    async def execute(self, arguments, user_info=None):
+        return ToolResult(
+            content=[{"type": "text", "text": f"Processed: {arguments['input']}"}]
+        )
+
+# Register your custom tool
+registry = ToolRegistry()
+registry.register_tool(MyCustomTool())
+```
+
+### Adding New Tools
+
+**Step 1: Create Tool File**
+```bash
+# Create new tool file
+touch src/datakwip_mcp/tools/my_new_tool.py
+```
+
+**Step 2: Implement Tool**
+```python
+# src/datakwip_mcp/tools/my_new_tool.py
+from .base import BaseTool, ToolResult
+
+class MyNewTool(BaseTool):
+    # Implement required methods
+    pass
+```
+
+**Step 3: Register Tool**
+```python
+# src/datakwip_mcp/tools/registry.py
+from .my_new_tool import MyNewTool
+
+class ToolRegistry:
+    def _register_default_tools(self):
+        default_tools = [
+            EchoTool(),
+            AddTool(),
+            MyNewTool(),  # Add here
+        ]
+```
+
+## Building and Distribution
+
+### 1. Build Package
+```bash
+# Build source and wheel distributions
+python -m build
+
+# This creates dist/ directory with:
+# - datakwip_mcp-1.0.0.tar.gz (source)
+# - datakwip_mcp-1.0.0-py3-none-any.whl (wheel)
+```
+
+### 2. Install from Built Package
+```bash
+# Install from wheel
+pip install dist/datakwip_mcp-1.0.0-py3-none-any.whl
+
+# Install from source
+pip install dist/datakwip_mcp-1.0.0.tar.gz
+```
+
+### 3. Test Installation
+```bash
+# Test package installation
+pip install .
+
+# Test CLI commands
+datakwip-mcp --help
+
+# Test import
+python -c "from datakwip_mcp.main import app; print('Success!')"
+```
+
+## Environment Configuration
+
+### Development
+```bash
+# .env file
+ENVIRONMENT=development
+LOG_LEVEL=DEBUG
+LOG_SENSITIVE_DATA=true
+
+# Run with development settings
+datakwip-mcp --dev
+```
+
+### Production
+```bash
+# .env file
+ENVIRONMENT=production
+LOG_LEVEL=INFO
+LOG_SENSITIVE_DATA=false
+
+# Run with production settings
+datakwip-mcp --host 0.0.0.0 --port 8000
+```
+
+## Testing
+
+### Run Tests
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=datakwip_mcp --cov-report=html
+
+# Run specific test file
+pytest tests/test_tools/test_echo.py
+
+# Run with verbose output
+pytest -v
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**1. Import Errors:**
+```bash
+# Make sure package is installed
+pip install -e .
+
+# Check Python path
+python -c "import sys; print(sys.path)"
+```
+
+**2. Configuration Issues:**
+```bash
+# Verify .env file exists and has correct variables
+cat .env
+
+# Test configuration loading
+python -c "from datakwip_mcp.config.settings import get_cognito_config; print(get_cognito_config())"
+```
+
+**3. CLI Not Working:**
+```bash
+# Reinstall package
+pip uninstall datakwip-mcp
+pip install -e .
+
+# Check entry points
+pip show datakwip-mcp
+```
+
+### Debug Mode
+
+```bash
+# Run with maximum verbosity
+datakwip-mcp --log-level debug --dev
+
+# Check package installation
+pip list | grep datakwip
+
+# Verify entry points
+python -c "import pkg_resources; print([ep for ep in pkg_resources.iter_entry_points('console_scripts') if 'datakwip' in ep.name])"
+```
+
+## Benefits of Package Structure
+
+1. **Easy Installation**: `pip install .` or `pip install datakwip-mcp`
+2. **Command Line Tools**: `datakwip-mcp` command
+3. **Proper Imports**: `from datakwip_mcp import ...`
+4. **Development Mode**: `pip install -e .` for live editing
+5. **Distribution Ready**: Can be published to PyPI
+6. **Dependency Management**: Automatic dependency installation
+7. **Entry Points**: Registered CLI commands
+8. **Professional Structure**: Follows Python packaging best practices
+
+Then restart Claude Desktop to connect to your MCP server.

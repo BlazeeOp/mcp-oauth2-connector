@@ -1,0 +1,3 @@
+[console_scripts]
+datakwip-mcp = datakwip_mcp.main:main
+datakwip-mcp-server = datakwip_mcp.cli:run_server
